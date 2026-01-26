@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  bot:
+    build: .
+    container_name: atlant_bot
+    restart: unless-stopped
+    env_file:
+      - .env
+    volumes:
+      # Монтируем директорию с базой данных для сохранения данных
+      - ./data:/app/data
+      # Опционально: монтируем логи
+      - ./logs:/app/logs
+    environment:
+      - DB_PATH=/app/data/bot_database.db
+      - PYTHONUNBUFFERED=1
+    # Опционально: можно добавить healthcheck
+    healthcheck:
+      test: ["CMD", "python", "-c", "import sys; sys.exit(0)"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+

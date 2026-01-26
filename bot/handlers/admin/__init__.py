@@ -1,0 +1,153 @@
+"""
+Модуль административных обработчиков
+Экспортирует все функции из подмодулей
+"""
+from .common import admin_required, handle_cancel_action_callback
+from .panel import handle_admin_panel_button, handle_admin_panel_callback
+from .cars import (
+    handle_admin_manage_cars_callback,
+    handle_admin_cars_page_callback,
+    handle_admin_edit_car_callback,
+    handle_admin_add_car_callback,
+    handle_car_name_input,
+    handle_car_description_input,
+    handle_car_price_input,
+    handle_edit_car_name_callback,
+    handle_edit_car_desc_callback,
+    handle_edit_car_price_callback,
+    handle_new_car_name_input,
+    handle_new_car_desc_input,
+    handle_new_car_price_input,
+    handle_edit_car_images_callback,
+    handle_upload_image_callback,
+    handle_delete_image_callback,
+    handle_car_image_1_input,
+    handle_car_image_2_input,
+    handle_car_image_3_input,
+    handle_car_add_images_callback,
+    handle_car_skip_images_callback,
+    handle_car_broadcast_yes_callback,
+    handle_car_broadcast_no_callback,
+    handle_delete_car_callback,
+    handle_confirm_delete_car_callback,
+    handle_edit_car_status_callback,
+    handle_admin_refresh_cars_callback,
+)
+from .rentals import (
+    handle_admin_manage_rentals_callback,
+    handle_admin_add_rental_callback,
+    handle_admin_rental_user_input,
+    handle_admin_select_car_for_rental_callback,
+    handle_admin_rental_cars_page_callback,
+    handle_admin_rental_reminder_type_callback,
+    handle_admin_rental_reminder_time_input,
+    handle_admin_rental_reminder_time_update,
+    handle_admin_rental_details_callback,
+    handle_admin_rental_reminder_callback,
+    handle_admin_rental_end_date_callback,
+    handle_admin_rental_end_date_update,
+    handle_admin_end_rental_callback,
+    handle_admin_confirm_end_rental_callback,
+    handle_admin_rentals_page_callback,
+    handle_admin_refresh_rentals_callback,
+)
+from .admins import (
+    handle_admin_manage_admins_callback,
+    handle_admin_add_admin_callback,
+    handle_admin_list_admins_callback,
+    handle_admin_delete_admin_callback,
+    handle_admin_confirm_delete_admin_callback,
+    handle_admin_confirm_delete_admin_final_callback,
+    handle_admin_id_input,
+)
+from .stats import (
+    handle_admin_stats_callback,
+    handle_admin_refresh_stats_callback,
+    handle_admin_page_info_callback,
+)
+from .export import (
+    handle_admin_export_db_callback,
+)
+from .states import (
+    CarCreationStates,
+    CarEditStates,
+    AdminManagementStates,
+    CarImageStates,
+    RentalManagementStates,
+    ContactManagementStates,
+)
+
+__all__ = [
+    # Common
+    'admin_required',
+    'handle_cancel_action_callback',
+    # Panel
+    'handle_admin_panel_button',
+    'handle_admin_panel_callback',
+    # Cars
+    'handle_admin_manage_cars_callback',
+    'handle_admin_cars_page_callback',
+    'handle_admin_edit_car_callback',
+    'handle_admin_add_car_callback',
+    'handle_car_name_input',
+    'handle_car_description_input',
+    'handle_car_price_input',
+    'handle_edit_car_name_callback',
+    'handle_edit_car_desc_callback',
+    'handle_edit_car_price_callback',
+    'handle_new_car_name_input',
+    'handle_new_car_desc_input',
+    'handle_new_car_price_input',
+    'handle_edit_car_images_callback',
+    'handle_upload_image_callback',
+    'handle_delete_image_callback',
+    'handle_car_image_1_input',
+    'handle_car_image_2_input',
+    'handle_car_image_3_input',
+    'handle_car_add_images_callback',
+    'handle_car_skip_images_callback',
+    'handle_car_broadcast_yes_callback',
+    'handle_car_broadcast_no_callback',
+    'handle_delete_car_callback',
+    'handle_confirm_delete_car_callback',
+    'handle_edit_car_status_callback',
+    'handle_admin_refresh_cars_callback',
+    # Rentals
+    'handle_admin_manage_rentals_callback',
+    'handle_admin_add_rental_callback',
+    'handle_admin_rental_user_input',
+    'handle_admin_select_car_for_rental_callback',
+    'handle_admin_rental_cars_page_callback',
+    'handle_admin_rental_reminder_type_callback',
+    'handle_admin_rental_reminder_time_input',
+    'handle_admin_rental_reminder_time_update',
+    'handle_admin_rental_details_callback',
+    'handle_admin_rental_reminder_callback',
+    'handle_admin_rental_end_date_callback',
+    'handle_admin_rental_end_date_update',
+    'handle_admin_end_rental_callback',
+    'handle_admin_confirm_end_rental_callback',
+    'handle_admin_rentals_page_callback',
+    'handle_admin_refresh_rentals_callback',
+    # Admins
+    'handle_admin_manage_admins_callback',
+    'handle_admin_add_admin_callback',
+    'handle_admin_list_admins_callback',
+    'handle_admin_delete_admin_callback',
+    'handle_admin_confirm_delete_admin_callback',
+    'handle_admin_confirm_delete_admin_final_callback',
+    'handle_admin_id_input',
+    # Stats
+    'handle_admin_stats_callback',
+    'handle_admin_refresh_stats_callback',
+    'handle_admin_page_info_callback',
+    # Export
+    'handle_admin_export_db_callback',
+    # States
+    'CarCreationStates',
+    'CarEditStates',
+    'AdminManagementStates',
+    'CarImageStates',
+    'RentalManagementStates',
+    'ContactManagementStates',
+]
