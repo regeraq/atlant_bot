@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Каталог автомобилей - OLIMP AUTO</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--tg-theme-bg-color, #1c1c1e);
+            color: var(--tg-theme-text-color, #ffffff);
+            padding: 10px;
+            min-height: 100vh;
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            font-weight: 700;
+            font-size: 24px;
+            color: var(--tg-theme-text-color, #ffffff);
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .card {
+            background: var(--tg-theme-secondary-bg-color, #2c2c2e);
+            border-radius: 12px;
+            padding: 10px;
+            text-align: center;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            cursor: pointer;
+        }
+
+        .card:active {
+            transform: scale(0.98);
+        }
+
+        .card img {
+            width: 100%;
+            border-radius: 8px;
+            height: 90px;
+            object-fit: cover;
+            margin-bottom: 8px;
+            background: var(--tg-theme-bg-color, #1c1c1e);
+        }
+
+        .title {
+            font-weight: bold;
+            margin: 5px 0;
+            font-size: 14px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            color: var(--tg-theme-text-color, #ffffff);
+        }
+
+        .price {
+            color: var(--tg-theme-link-color, #007aff);
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .status {
+            font-size: 11px;
+            padding: 2px 6px;
+            border-radius: 4px;
+            display: inline-block;
+            margin-bottom: 8px;
+        }
+
+        .status.available {
+            background-color: rgba(52, 199, 89, 0.2);
+            color: #34c759;
+        }
+
+        .status.unavailable {
+            background-color: rgba(255, 59, 48, 0.2);
+            color: #ff3b30;
+        }
+
+        .btn {
+            background-color: var(--tg-theme-button-color, #007aff);
+            color: var(--tg-theme-button-text-color, #ffffff);
+            border: none;
+            padding: 8px 0;
+            border-radius: 8px;
+            width: 100%;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        .btn:active {
+            opacity: 0.7;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: var(--tg-theme-hint-color, #8e8e93);
+        }
+
+        .error {
+            text-align: center;
+            padding: 20px;
+            color: #ff3b30;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h2>🚗 Выберите автомобиль</h2>
+    <div class="container" id="car-list">
+        <div class="loading">Загрузка каталога...</div>
+    </div>
+
+    <script>
+        const tg = window.Telegram.WebApp;
+        
+        // Инициализация Telegram WebApp
+        tg.ready();
+        tg.expand(); // Разворачиваем на весь экран
+        
+        // Настройка MainButton (большая кнопка внизу в Telegram)
+        tg.MainButton.textColor = "#FFFFFF";
+        tg.MainButton.color = "#2cab37";
+        tg.MainButton.hide();
+
+        const container = document.getElementById('car-list');
+        let selectedCar = null;
+
+        // Функция для загрузки автомобилей из базы данных через бота
+        // В реальной реализации можно добавить API endpoint для получения данных
+        async function loadCars() {
+            try {
+                // Получаем данные из initData (если переданы ботом)
+                // Или используем mock данные для демонстрации
+                const initData = tg.initData;
+                
+                // В реальной реализации здесь будет запрос к API бота
+                // Пока используем mock данные
+                const cars = await fetchCarsFromBot();
+                
+                if (cars && cars.length > 0) {
+                    renderCars(cars);
+                } else {
+                    container.innerHTML = '<div class="error">❌ Каталог пуст</div>';
+                }
+            } catch (error) {
+                console.error('Ошибка загрузки автомобилей:', error);
+                container.innerHTML = '<div class="error">❌ Ошибка загрузки каталога</div>';
+            }
+        }
+
+        // Функция для получения автомобилей (заглушка - в реальности будет API запрос)
+        async function fetchCarsFromBot() {
+            // Mock данные для демонстрации
+            // В реальной реализации здесь будет запрос к API бота
+            return [
+                {id: 1, name: "Hyundai Solaris", price: 2500, img: "https://via.placeholder.com/150/0000FF/808080?text=Solaris", available: true},
+                {id: 2, name: "Kia K5 Business", price: 4500, img: "https://via.placeholder.com/150/FF0000/FFFFFF?text=Kia+K5", available: true},
+                {id: 3, name: "BMW 5 Series", price: 8000, img: "https://via.placeholder.com/150/000000/FFFFFF?text=BMW+5", available: true},
+                {id: 4, name: "Mercedes E-Class", price: 9500, img: "https://via.placeholder.com/150/FFFF00/000000?text=Mercedes", available: false},
+                {id: 5, name: "Geely Monjaro", price: 7000, img: "https://via.placeholder.com/150/008000/FFFFFF?text=Geely", available: true}
+            ];
+        }
+
+        // Функция для отображения автомобилей
+        function renderCars(cars) {
+            container.innerHTML = '';
+            
+            cars.forEach(car => {
+                const card = document.createElement('div');
+                card.className = 'card';
+                
+                const imageUrl = car.image_1 || car.img || 'https://via.placeholder.com/150/CCCCCC/666666?text=Нет+фото';
+                const priceText = `${car.daily_price ? car.daily_price.toLocaleString('ru-RU') : car.price} ₽/сут.`;
+                const isAvailable = car.available !== false;
+                
+                card.innerHTML = `
+                    <img src="${imageUrl}" alt="${car.name}" onerror="this.src='https://via.placeholder.com/150/CCCCCC/666666?text=Нет+фото'">
+                    <div class="title">${car.name}</div>
+                    <div class="price">${priceText}</div>
+                    <div class="status ${isAvailable ? 'available' : 'unavailable'}">
+                        ${isAvailable ? '✅ Доступен' : '❌ Недоступен'}
+                    </div>
+                    <button class="btn" onclick="selectCar(${car.id}, '${car.name.replace(/'/g, "\\'")}', ${isAvailable})" ${!isAvailable ? 'disabled' : ''}>
+                        ${isAvailable ? 'Забронировать' : 'Недоступен'}
+                    </button>
+                `;
+                
+                container.appendChild(card);
+            });
+        }
+
+        // Функция выбора автомобиля
+        function selectCar(id, name, isAvailable) {
+            if (!isAvailable) {
+                // Тактильная обратная связь
+                if (tg.HapticFeedback) {
+                    tg.HapticFeedback.notificationOccurred('error');
+                }
+                return;
+            }
+
+            // Тактильная обратная связь
+            if (tg.HapticFeedback) {
+                tg.HapticFeedback.impactOccurred('medium');
+            }
+
+            selectedCar = { id, name };
+            
+            // Отправляем данные обратно в бота в формате JSON
+            const data = JSON.stringify({
+                action: "book_car",
+                car_id: id,
+                car_name: name
+            });
+            
+            tg.sendData(data);
+            
+            // Показываем уведомление пользователю
+            tg.showAlert('Заявка отправлена! Менеджер свяжется с вами в ближайшее время.');
+        }
+
+        // Загружаем автомобили при загрузке страницы
+        loadCars();
+    </script>
+</body>
+</html>
+
