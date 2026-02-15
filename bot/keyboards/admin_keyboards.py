@@ -16,9 +16,9 @@ def get_admin_main_menu():
     )
 
 def get_admin_panel_keyboard() -> InlineKeyboardMarkup:
-    """Создает главную админ панель"""
+    """Создает главную админ панель с цветными кнопками (Bot API 9.4)"""
     keyboard = [
-        [InlineKeyboardButton(text="➕ Добавить автомобиль", callback_data="admin_add_car")],
+        [InlineKeyboardButton(text="➕ Добавить автомобиль", callback_data="admin_add_car", style="primary")],
         [InlineKeyboardButton(text="📋 Управление автомобилями", callback_data="admin_manage_cars")],
         [InlineKeyboardButton(text="🚗 Управление арендой", callback_data="admin_manage_rentals")],
         [
@@ -103,7 +103,7 @@ def get_admin_cars_management_keyboard(cars: List[Dict[str, Any]], page: int = 0
     # Кнопки действий (только для управления автомобилями, не для выбора при аренде)
     if callback_prefix != "rental_car_select":
         keyboard.append([
-            InlineKeyboardButton(text="➕ Добавить автомобиль", callback_data="admin_add_car"),
+            InlineKeyboardButton(text="➕ Добавить автомобиль", callback_data="admin_add_car", style="primary"),
             InlineKeyboardButton(text="🔄 Обновить", callback_data="admin_refresh_cars")
         ])
         keyboard.append([InlineKeyboardButton(
@@ -114,7 +114,8 @@ def get_admin_cars_management_keyboard(cars: List[Dict[str, Any]], page: int = 0
         # Для выбора автомобиля при аренде - только кнопка отмены
         keyboard.append([InlineKeyboardButton(
             text="❌ Отмена",
-            callback_data="cancel_action"
+            callback_data="cancel_action",
+            style="danger"
         )])
     
     return InlineKeyboardMarkup(inline_keyboard=keyboard)
@@ -128,7 +129,7 @@ def get_car_edit_keyboard(car_id: int) -> InlineKeyboardMarkup:
         [InlineKeyboardButton(text="🖼️ Управление фотографиями", callback_data=f"edit_car_images:{car_id}")],
         [InlineKeyboardButton(text="📊 Изменить статус", callback_data=f"edit_car_status:{car_id}")],
         [InlineKeyboardButton(text="🛠️ Журнал обслуживания", callback_data=f"car_maintenance:{car_id}")],  # Модуль 5
-        [InlineKeyboardButton(text="🗑️ Удалить автомобиль", callback_data=f"delete_car:{car_id}")],
+        [InlineKeyboardButton(text="🗑️ Удалить автомобиль", callback_data=f"delete_car:{car_id}", style="danger")],
         [
             InlineKeyboardButton(text="🔙 Назад к списку", callback_data="admin_manage_cars"),
             InlineKeyboardButton(text="🏠 Админ панель", callback_data="back_to_admin_panel")
@@ -138,10 +139,10 @@ def get_car_edit_keyboard(car_id: int) -> InlineKeyboardMarkup:
     return InlineKeyboardMarkup(inline_keyboard=keyboard)
 
 def get_car_delete_confirm_keyboard(car_id: int) -> InlineKeyboardMarkup:
-    """Создает клавиатуру подтверждения удаления автомобиля"""
+    """Создает клавиатуру подтверждения удаления автомобиля с цветными кнопками (Bot API 9.4)"""
     keyboard = [
         [
-            InlineKeyboardButton(text="✅ Да, удалить", callback_data=f"confirm_delete_car:{car_id}"),
+            InlineKeyboardButton(text="✅ Да, удалить", callback_data=f"confirm_delete_car:{car_id}", style="danger"),
             InlineKeyboardButton(text="❌ Отмена", callback_data=f"admin_edit_car:{car_id}")
         ],
         [InlineKeyboardButton(text="🔙 Назад", callback_data=f"admin_edit_car:{car_id}")]
@@ -164,7 +165,7 @@ def get_admin_management_keyboard() -> InlineKeyboardMarkup:
     keyboard = [
         [InlineKeyboardButton(text="➕ Добавить админа", callback_data="admin_add_admin")],
         [InlineKeyboardButton(text="📋 Список админов", callback_data="admin_list_admins")],
-        [InlineKeyboardButton(text="🗑️ Удалить админа", callback_data="admin_delete_admin")],
+        [InlineKeyboardButton(text="🗑️ Удалить админа", callback_data="admin_delete_admin", style="danger")],
         [InlineKeyboardButton(text="🔙 Назад в админ панель", callback_data="back_to_admin_panel")]
     ]
     
@@ -178,7 +179,8 @@ def get_admin_list_keyboard(admins: list) -> InlineKeyboardMarkup:
         admin_id = admin['telegram_id']
         keyboard.append([InlineKeyboardButton(
             text=f"🗑️ Удалить ID: {admin_id}",
-            callback_data=f"admin_confirm_delete_admin:{admin_id}"
+            callback_data=f"admin_confirm_delete_admin:{admin_id}",
+            style="danger"
         )])
     
     keyboard.append([
@@ -189,10 +191,10 @@ def get_admin_list_keyboard(admins: list) -> InlineKeyboardMarkup:
     return InlineKeyboardMarkup(inline_keyboard=keyboard)
 
 def get_admin_delete_confirm_keyboard(admin_id: int) -> InlineKeyboardMarkup:
-    """Клавиатура подтверждения удаления админа"""
+    """Клавиатура подтверждения удаления админа с цветными кнопками (Bot API 9.4)"""
     keyboard = [
         [
-            InlineKeyboardButton(text="✅ Да, удалить", callback_data=f"admin_confirm_delete_admin_final:{admin_id}"),
+            InlineKeyboardButton(text="✅ Да, удалить", callback_data=f"admin_confirm_delete_admin_final:{admin_id}", style="danger"),
             InlineKeyboardButton(text="❌ Отмена", callback_data="admin_manage_admins")
         ],
         [InlineKeyboardButton(text="🔙 Назад", callback_data="admin_manage_admins")]
@@ -201,9 +203,9 @@ def get_admin_delete_confirm_keyboard(admin_id: int) -> InlineKeyboardMarkup:
     return InlineKeyboardMarkup(inline_keyboard=keyboard)
 
 def get_cancel_keyboard() -> InlineKeyboardMarkup:
-    """Создает клавиатуру отмены действия"""
+    """Создает клавиатуру отмены действия с цветными кнопками (Bot API 9.4)"""
     keyboard = [
-        [InlineKeyboardButton(text="❌ Отмена", callback_data="cancel_action")],
+        [InlineKeyboardButton(text="❌ Отмена", callback_data="cancel_action", style="danger")],
         [InlineKeyboardButton(text="🔙 Назад в админ панель", callback_data="back_to_admin_panel")]
     ]
     return InlineKeyboardMarkup(inline_keyboard=keyboard)
@@ -214,9 +216,9 @@ def get_car_images_keyboard(car_id: int) -> InlineKeyboardMarkup:
         [InlineKeyboardButton(text="📷 Загрузить изображение 1", callback_data=f"upload_image_1:{car_id}")],
         [InlineKeyboardButton(text="📷 Загрузить изображение 2", callback_data=f"upload_image_2:{car_id}")],
         [InlineKeyboardButton(text="📷 Загрузить изображение 3", callback_data=f"upload_image_3:{car_id}")],
-        [InlineKeyboardButton(text="🗑️ Удалить изображение 1", callback_data=f"delete_image_1:{car_id}")],
-        [InlineKeyboardButton(text="🗑️ Удалить изображение 2", callback_data=f"delete_image_2:{car_id}")],
-        [InlineKeyboardButton(text="🗑️ Удалить изображение 3", callback_data=f"delete_image_3:{car_id}")],
+        [InlineKeyboardButton(text="🗑️ Удалить изображение 1", callback_data=f"delete_image_1:{car_id}", style="danger")],
+        [InlineKeyboardButton(text="🗑️ Удалить изображение 2", callback_data=f"delete_image_2:{car_id}", style="danger")],
+        [InlineKeyboardButton(text="🗑️ Удалить изображение 3", callback_data=f"delete_image_3:{car_id}", style="danger")],
         [
             InlineKeyboardButton(text="🔙 Назад к редактированию", callback_data=f"admin_edit_car:{car_id}"),
             InlineKeyboardButton(text="🏠 Админ панель", callback_data="back_to_admin_panel")
@@ -240,24 +242,24 @@ def get_broadcast_main_keyboard() -> InlineKeyboardMarkup:
     return InlineKeyboardMarkup(inline_keyboard=keyboard)
 
 def get_broadcast_content_keyboard() -> InlineKeyboardMarkup:
-    """Клавиатура для управления содержимым рассылки"""
+    """Клавиатура для управления содержимым рассылки с цветными кнопками (Bot API 9.4)"""
     keyboard = [
         [InlineKeyboardButton(text="👁️ Предварительный просмотр", callback_data="broadcast_preview")],
-        [InlineKeyboardButton(text="📢 Отправить всем", callback_data="broadcast_send_all")],
+        [InlineKeyboardButton(text="📢 Отправить всем", callback_data="broadcast_send_all", style="primary")],
         [
             InlineKeyboardButton(text="🔄 Начать заново", callback_data="broadcast_reset"),
-            InlineKeyboardButton(text="❌ Отмена", callback_data="admin_broadcast")
+            InlineKeyboardButton(text="❌ Отмена", callback_data="admin_broadcast", style="danger")
         ],
         [InlineKeyboardButton(text="🔙 Назад в админ панель", callback_data="back_to_admin_panel")]
     ]
     return InlineKeyboardMarkup(inline_keyboard=keyboard)
 
 def get_broadcast_confirm_keyboard() -> InlineKeyboardMarkup:
-    """Клавиатура подтверждения отправки рассылки"""
+    """Клавиатура подтверждения отправки рассылки с цветными кнопками (Bot API 9.4)"""
     keyboard = [
         [
-            InlineKeyboardButton(text="✅ Да, отправить", callback_data="broadcast_confirm_send"),
-            InlineKeyboardButton(text="❌ Отмена", callback_data="broadcast_main")
+            InlineKeyboardButton(text="✅ Да, отправить", callback_data="broadcast_confirm_send", style="success"),
+            InlineKeyboardButton(text="❌ Отмена", callback_data="broadcast_main", style="danger")
         ],
         [InlineKeyboardButton(text="🔙 Назад", callback_data="broadcast_main")]
     ]

@@ -76,7 +76,7 @@ async def handle_user_notes_callback(callback: CallbackQuery, user_id: Optional[
     text += "\n💡 <i>Выберите действие:</i>"
     
     keyboard = InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text="➕ Добавить заметку", callback_data=f"user_note_add:{user_id}")],
+        [InlineKeyboardButton(text="➕ Добавить заметку", callback_data=f"user_note_add:{user_id}", style="primary")],
     ])
     
     if notes:
@@ -89,7 +89,8 @@ async def handle_user_notes_callback(callback: CallbackQuery, user_id: Optional[
             keyboard.inline_keyboard.append([
                 InlineKeyboardButton(
                     text=f"🗑️ Удалить: {note_text_short}",
-                    callback_data=f"user_note_delete:{note_id}:{user_id}"
+                    callback_data=f"user_note_delete:{note_id}:{user_id}",
+                    style="danger"
                 )
             ])
     

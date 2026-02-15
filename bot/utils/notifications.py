@@ -174,6 +174,8 @@ class BroadcastManager:
                     text=text or "Пустое сообщение",
                     reply_markup=reply_markup,
                     parse_mode='HTML'
+                    # Bot API 9.4: можно добавить message_effect_id для эффектов сообщений (только для приватных чатов)
+                    # Bot API 9.4: можно добавить allow_paid_broadcast=True для платной рассылки (до 1000 сообщений/сек за 0.1 Stars)
                 )
             
             elif content_type == 'photo':

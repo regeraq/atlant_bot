@@ -87,7 +87,8 @@ async def handle_car_maintenance_callback(callback: CallbackQuery) -> None:
                 keyboard_buttons.append([
                     InlineKeyboardButton(
                         text=f"🗑️ Удалить напоминание #{i}",
-                        callback_data=f"maintenance_remove_reminder:{entry_id}:{car_id}"
+                        callback_data=f"maintenance_remove_reminder:{entry_id}:{car_id}",
+                        style="danger"
                     )
                 ])
     else:
@@ -97,7 +98,7 @@ async def handle_car_maintenance_callback(callback: CallbackQuery) -> None:
     
     # Добавляем основные кнопки
     keyboard_buttons.extend([
-        [InlineKeyboardButton(text="➕ Новая запись", callback_data=f"maintenance_add:{car_id}")],
+        [InlineKeyboardButton(text="➕ Новая запись", callback_data=f"maintenance_add:{car_id}", style="primary")],
         [InlineKeyboardButton(text="⬅️ Назад к авто", callback_data=f"admin_edit_car:{car_id}")]
     ])
     
@@ -140,7 +141,7 @@ async def handle_maintenance_add_callback(callback: CallbackQuery, state: FSMCon
             [InlineKeyboardButton(text="🛡️ Страховка", callback_data="maintenance_type:Страховка")],
             [InlineKeyboardButton(text="🔨 Ремонт", callback_data="maintenance_type:Ремонт")],
             [InlineKeyboardButton(text="📋 Другое", callback_data="maintenance_type:Другое")],
-            [InlineKeyboardButton(text="❌ Отмена", callback_data="cancel_action")]
+            [InlineKeyboardButton(text="❌ Отмена", callback_data="cancel_action", style="danger")]
         ]),
         parse_mode='HTML'
     )
@@ -332,7 +333,7 @@ async def handle_maintenance_event_date_input(message: Message, state: FSMContex
         reply_markup=InlineKeyboardMarkup(inline_keyboard=[
             [InlineKeyboardButton(text="✅ Да, установить", callback_data="maintenance_reminder_yes")],
             [InlineKeyboardButton(text="⏭️ Пропустить", callback_data="maintenance_reminder_no")],
-            [InlineKeyboardButton(text="❌ Отмена", callback_data="cancel_action")]
+            [InlineKeyboardButton(text="❌ Отмена", callback_data="cancel_action", style="danger")]
         ]),
         parse_mode='HTML'
     )
@@ -361,7 +362,7 @@ async def handle_maintenance_reminder_decision_callback(callback: CallbackQuery,
 💡 <i>Или введите "сегодня" для текущей даты</i>""",
             reply_markup=InlineKeyboardMarkup(inline_keyboard=[
                 [InlineKeyboardButton(text="⏭️ Пропустить", callback_data="maintenance_reminder_no")],
-                [InlineKeyboardButton(text="❌ Отмена", callback_data="cancel_action")]
+                [InlineKeyboardButton(text="❌ Отмена", callback_data="cancel_action", style="danger")]
             ]),
             parse_mode='HTML'
         )
@@ -393,7 +394,7 @@ async def handle_maintenance_reminder_date_input(message: Message, state: FSMCon
                 "❌ <b>Неверный формат даты</b>\n\n💡 Введите дату в формате <code>ДД.ММ.ГГГГ</code> или нажмите 'Пропустить':",
                 reply_markup=InlineKeyboardMarkup(inline_keyboard=[
                     [InlineKeyboardButton(text="⏭️ Пропустить", callback_data="maintenance_reminder_no")],
-                    [InlineKeyboardButton(text="❌ Отмена", callback_data="cancel_action")]
+                    [InlineKeyboardButton(text="❌ Отмена", callback_data="cancel_action", style="danger")]
                 ]),
                 parse_mode='HTML'
             )

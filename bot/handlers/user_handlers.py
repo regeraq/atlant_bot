@@ -37,12 +37,14 @@ async def handle_cars_button(message: Message):
         )
         return
     
-    # Отправляем каталог автомобилей
+    # Отправляем каталог автомобилей с улучшенным дизайном
+    from bot.utils.formatters import format_divider
+    
     text = f"""🚗 <b>КАТАЛОГ АВТОМОБИЛЕЙ</b>
 
-━━━━━━━━━━━━━━━━━━━━━━
+{format_divider("thin")}
 📊 <b>Доступно:</b> {len(cars)} автомобилей
-━━━━━━━━━━━━━━━━━━━━━━
+{format_divider("thin")}
 
 💡 <i>Выберите автомобиль для просмотра подробной информации</i>"""
     
@@ -73,12 +75,14 @@ async def handle_cars_page_callback(callback: CallbackQuery):
         await safe_callback_answer(callback)
         return
     
-    # Обновляем сообщение с новой страницей (edit_text вместо удаления для пагинации)
+    # Обновляем сообщение с новой страницей
+    from bot.utils.formatters import format_divider
+    
     text = f"""🚗 <b>КАТАЛОГ АВТОМОБИЛЕЙ</b>
 
-━━━━━━━━━━━━━━━━━━━━━━
+{format_divider("thin")}
 📊 <b>Доступно:</b> {len(cars)} автомобилей
-━━━━━━━━━━━━━━━━━━━━━━
+{format_divider("thin")}
 
 💡 <i>Выберите автомобиль для просмотра подробной информации</i>"""
     
@@ -107,18 +111,21 @@ async def handle_car_details_callback(callback: CallbackQuery):
     except Exception:
         pass
     
-    # Формируем детальную информацию
+    # Формируем детальную информацию с улучшенным дизайном
+    from bot.utils.formatters import format_status_badge, format_price, format_divider
+    
     status_text = "Доступен" if car['available'] else "Недоступен"
-    price_formatted = f"{car['daily_price']:,} ₽"
+    status_badge = format_status_badge(status_text, car['available'])
+    price_formatted = format_price(car['daily_price'])
     
     text = f"""🚗 <b>{car['name']}</b>
 
-━━━━━━━━━━━━━━━━━━━━━━
+{format_divider("thin")}
 💰 <b>Цена:</b> {price_formatted}/день
-📊 <b>Статус:</b> {status_text}
-━━━━━━━━━━━━━━━━━━━━━━
+{status_badge}
+{format_divider("thin")}
 
-<b>Описание</b>
+📝 <b>Описание</b>
 {car['description']}"""
     
     if not car['available']:
@@ -194,11 +201,13 @@ async def handle_back_to_catalog_callback(callback: CallbackQuery):
         return
     
     # Отправляем новое сообщение с каталогом
+    from bot.utils.formatters import format_divider
+    
     text = f"""🚗 <b>КАТАЛОГ АВТОМОБИЛЕЙ</b>
 
-━━━━━━━━━━━━━━━━━━━━━━
+{format_divider("thin")}
 📊 <b>Доступно:</b> {len(cars)} автомобилей
-━━━━━━━━━━━━━━━━━━━━━━
+{format_divider("thin")}
 
 💡 <i>Выберите автомобиль для просмотра подробной информации</i>"""
     
@@ -248,12 +257,14 @@ async def handle_refresh_cars_callback(callback: CallbackQuery):
         return
     
     # Обновляем каталог с временной меткой
+    from bot.utils.formatters import format_divider
+    
     text = f"""🚗 <b>КАТАЛОГ АВТОМОБИЛЕЙ</b>
 
-━━━━━━━━━━━━━━━━━━━━━━
+{format_divider("thin")}
 📊 <b>Доступно:</b> {len(cars)} автомобилей
 ⏰ <b>Обновлено:</b> {current_time}
-━━━━━━━━━━━━━━━━━━━━━━
+{format_divider("thin")}
 
 💡 <i>Выберите автомобиль для просмотра деталей:</i>"""
     
@@ -287,28 +298,33 @@ async def handle_book_car_callback(callback: CallbackQuery):
     except Exception:
         pass
     
-    # Формируем сообщение для бронирования
-    price_formatted = f"{car['daily_price']:,} ₽"
+    # Формируем сообщение для бронирования с улучшенным дизайном
+    from bot.utils.formatters import format_price, format_divider, format_section
+    
+    price_formatted = format_price(car['daily_price'])
     
     text = f"""🚗 <b>БРОНИРОВАНИЕ АВТОМОБИЛЯ</b>
 
-━━━━━━━━━━━━━━━━━━━━━━
+{format_divider("thin")}
 🚙 <b>{car['name']}</b>
 💰 <b>Цена:</b> {price_formatted}/день
-━━━━━━━━━━━━━━━━━━━━━━
+{format_divider("thin")}
 
-<b>Следующие шаги</b>
-1. Свяжитесь с менеджером
-2. Укажите даты аренды
-3. Подтвердите бронирование
+{format_section(
+    "Следующие шаги",
+    """1️⃣ Свяжитесь с менеджером
+2️⃣ Укажите даты аренды
+3️⃣ Подтвердите бронирование
 
-<i>Менеджер ответит в течение 5 минут</i>"""
+⚡ <b>Менеджер ответит в течение 5 минут!</b>""",
+    "📋"
+)}"""
     
     # Проверяем, настроен ли контакт для бронирования
     if BOOKING_CONTACT_ID:
         # Создаем клавиатуру с кнопкой для связи
         keyboard = InlineKeyboardMarkup(inline_keyboard=[
-            [InlineKeyboardButton(text="Связаться с менеджером", url=f"tg://user?id={BOOKING_CONTACT_ID}")],
+            [InlineKeyboardButton(text="Связаться с менеджером", url=f"tg://user?id={BOOKING_CONTACT_ID}", style="primary")],
             [
                 InlineKeyboardButton(text="К автомобилю", callback_data=f"car_details:{car_id}"),
                 InlineKeyboardButton(text="Каталог", callback_data="back_to_catalog")
@@ -369,11 +385,17 @@ async def handle_page_info_callback(callback: CallbackQuery):
     await safe_callback_answer(callback, "Информация о текущей странице каталога")
 
 async def handle_user_profile(message: Message):
-    """Обработчик просмотра профиля пользователя"""
-    from bot.keyboards.user_keyboards import get_main_menu
+    """Обработчик просмотра профиля пользователя с улучшенным дизайном (Bot API 9.4)"""
+    from bot.keyboards.user_keyboards import get_main_menu, get_profile_keyboard
+    from bot.utils.formatters import (
+        format_profile_header, format_section, format_info_line,
+        format_status_badge, format_rental_summary, format_divider,
+        format_days_count, format_deposit_status
+    )
     from datetime import datetime
     
     user_id = message.from_user.id
+    user_name = message.from_user.first_name or "Пользователь"
     
     # Получаем активную аренду пользователя
     rental = await get_active_rental_by_user(user_id)
@@ -453,60 +475,88 @@ async def handle_user_profile(message: Message):
             except:
                 pass
         
-        # Информация о залоге
-        deposit_text = ""
-        if deposit_amount > 0:
-            status_names = {
-                'pending': 'Ожидается',
-                'paid': 'Внесен',
-                'returned': 'Возвращен'
-            }
-            status_text = status_names.get(deposit_status, deposit_status)
-            deposit_text = f"\n<b>💡 Залог</b> {deposit_amount:,.2f} ₽ (Статус: {status_text})"
+        # Форматируем информацию с использованием новых утилит
+        from bot.utils.formatters import format_price, format_date as fmt_date
         
-        # Информация о скидке
-        discount_text = ""
+        # Расчет общей стоимости
+        total_cost = daily_price * days_rented
         if referral_discount > 0:
-            discount_text = f"\n<b>🎁 Реферальная скидка</b> {referral_discount}% применена"
+            discount_amount = total_cost * (referral_discount / 100)
+            total_cost -= discount_amount
+            discount_info = f"\n🎁 <b>Скидка {referral_discount}%:</b> -{format_price(discount_amount)}"
+        else:
+            discount_info = ""
         
-        text = f"""<b>👤 Мой профиль</b>
-
-<b>🚗 Арендуемый автомобиль</b>
-{car_name}
-
-<b>💰 Стоимость</b> {price_formatted}/день{discount_text}
-<b>📅 Начало аренды</b> {start_date_formatted}
-<b>📅 Окончание аренды</b> {end_date_formatted}
-<b>📆 Дней в аренде</b> {days_rented}{deposit_text}
-
-<b>⏰ Напоминание об оплате</b>
-Время: {reminder_time}
-Частота: {type_name}{next_reminder_text}
-
-<i>Для вопросов свяжитесь с менеджером</i>"""
+        # Информация о залоге
+        deposit_info = ""
+        if deposit_amount > 0:
+            deposit_emoji, deposit_status_text = format_deposit_status(deposit_status)
+            deposit_info = f"\n{deposit_emoji} <b>Залог:</b> {format_price(deposit_amount)} ({deposit_status_text})"
         
-        # Создаем клавиатуру с кнопкой "Связаться с менеджером"
-        from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
+        # Создаем красивый профиль
+        header = format_profile_header(user_name)
+        divider = format_divider("thick")
+        
+        # Секция аренды - создаем вручную для лучшего контроля
+        days_text = format_days_count(days_rented)
+        price_text = format_price(daily_price)
+        total_cost = daily_price * days_rented
+        
+        discount_info = ""
+        if referral_discount > 0:
+            discount_amount = total_cost * (referral_discount / 100)
+            total_cost -= discount_amount
+            discount_info = f"\n🎁 <b>Скидка {referral_discount}%:</b> -{format_price(discount_amount)}"
+        
+        deposit_info = ""
+        if deposit_amount > 0:
+            deposit_emoji, deposit_status_text = format_deposit_status(deposit_status)
+            deposit_info = f"\n{deposit_emoji} <b>Залог:</b> {format_price(deposit_amount)} ({deposit_status_text})"
+        
+        rental_section = f"""
+🚗 <b>{car_name}</b>
+
+💰 <b>Стоимость:</b> {price_text}/день
+📅 <b>Начало:</b> {start_date_formatted}
+📅 <b>Окончание:</b> {end_date_formatted}
+📆 <b>Дней в аренде:</b> {days_text}
+💵 <b>Общая стоимость:</b> {format_price(total_cost)}{discount_info}{deposit_info}
+"""
+        
+        # Секция напоминаний
+        reminder_emoji = "⏰" if reminder_type == 'daily' else "📅"
+        reminder_section = f"""
+{reminder_emoji} <b>Напоминания об оплате</b>
+{format_info_line("Время", reminder_time, "🕐")}
+{format_info_line("Частота", type_name, "🔄")}{next_reminder_text}
+"""
+        
+        # Статус аренды
+        status_badge = format_status_badge("Активная аренда", True)
+        
+        text = f"""{header}
+
+{divider}
+
+{status_badge}
+
+{rental_section}
+
+{reminder_section}
+
+{divider}
+
+💡 <i>Для вопросов свяжитесь с менеджером</i>"""
+        
+        # Создаем красивую клавиатуру
+        from bot.keyboards.user_keyboards import get_profile_keyboard
         from bot.database.database import get_setting
-        # Модуль 6: Проверяем, включена ли реферальная система
         referral_enabled = await get_setting('referral_system_enabled')
         
-        profile_keyboard = InlineKeyboardMarkup(inline_keyboard=[
-            [InlineKeyboardButton(
-                text="📞 Связаться с менеджером",
-                url=f"tg://user?id={BOOKING_CONTACT_ID}" if BOOKING_CONTACT_ID else None,
-                callback_data="contact_manager" if not BOOKING_CONTACT_ID else None
-            )],
-        ])
-        
-        # Модуль 6: Добавляем кнопку "Пригласить друга", если система включена
-        if referral_enabled == 'true':
-            profile_keyboard.inline_keyboard.append(
-                [InlineKeyboardButton(text="🤝 Пригласить друга", callback_data="user_invite_friend")]
-            )
-        
-        profile_keyboard.inline_keyboard.append(
-            [InlineKeyboardButton(text="🏠 Главное меню", callback_data="back_to_main")]
+        profile_keyboard = get_profile_keyboard(
+            has_rental=True,
+            referral_enabled=(referral_enabled == 'true'),
+            booking_contact_id=BOOKING_CONTACT_ID
         )
         
         # Если есть изображения автомобиля, отправляем их
@@ -546,42 +596,45 @@ async def handle_user_profile(message: Message):
                 parse_mode='HTML'
             )
     else:
-        # У пользователя нет активной аренды
-        text = """<b>👤 Мой профиль</b>
-
-<b>Статус</b>
-Нет активной аренды
-
-<b>Как взять автомобиль в аренду</b>
-1. Просмотрите каталог
-2. Выберите автомобиль
-3. Свяжитесь с менеджером
-
-<i>Быстрое оформление — 5 минут</i>"""
+        # У пользователя нет активной аренды - красивый дизайн
+        header = format_profile_header(user_name)
+        divider = format_divider("thick")
+        status_badge = format_status_badge("Нет активной аренды", False)
         
-        from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
+        text = f"""{header}
+
+{divider}
+
+{status_badge}
+
+{format_section(
+    "Как взять автомобиль в аренду",
+    """1️⃣ Просмотрите каталог автомобилей
+2️⃣ Выберите понравившийся автомобиль
+3️⃣ Свяжитесь с менеджером для бронирования
+
+⚡ <b>Быстрое оформление — всего 5 минут!</b>""",
+    "🚗"
+)}
+
+{divider}
+
+💡 <i>Начните с просмотра каталога</i>"""
+        
+        from bot.keyboards.user_keyboards import get_profile_keyboard
         from bot.database.database import get_setting
         
-        # Модуль 6: Проверяем, включена ли реферальная система
         referral_enabled = await get_setting('referral_system_enabled')
         
-        keyboard = InlineKeyboardMarkup(inline_keyboard=[
-            [InlineKeyboardButton(text="🚗 Каталог автомобилей", callback_data="back_to_catalog")],
-        ])
-        
-        # Модуль 6: Добавляем кнопку "Пригласить друга", если система включена
-        if referral_enabled == 'true':
-            keyboard.inline_keyboard.append(
-                [InlineKeyboardButton(text="🤝 Пригласить друга", callback_data="user_invite_friend")]
-            )
-        
-        keyboard.inline_keyboard.append(
-            [InlineKeyboardButton(text="📞 Контакты", callback_data="back_to_main")]
+        profile_keyboard = get_profile_keyboard(
+            has_rental=False,
+            referral_enabled=(referral_enabled == 'true'),
+            booking_contact_id=None
         )
         
         await message.answer(
             text,
-            reply_markup=keyboard,
+            reply_markup=profile_keyboard,
             parse_mode='HTML'
         )
 

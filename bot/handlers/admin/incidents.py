@@ -114,7 +114,8 @@ async def handle_rental_incidents_callback(callback: CallbackQuery) -> None:
             keyboard.inline_keyboard.append([
                 InlineKeyboardButton(
                     text=button_text,
-                    callback_data=f"incident_delete:{incident_id}:{rental_id}"
+                    callback_data=f"incident_delete:{incident_id}:{rental_id}",
+                    style="danger"
                 )
             ])
         
@@ -166,7 +167,7 @@ async def handle_incident_add_callback(callback: CallbackQuery, state: FSMContex
             [InlineKeyboardButton(text="🚨 Штраф", callback_data="incident_type:штраф")],
             [InlineKeyboardButton(text="🔧 Повреждение", callback_data="incident_type:повреждение")],
             [InlineKeyboardButton(text="📋 Другое", callback_data="incident_type:другое")],
-            [InlineKeyboardButton(text="❌ Отмена", callback_data="cancel_action")]
+            [InlineKeyboardButton(text="❌ Отмена", callback_data="cancel_action", style="danger")]
         ]),
         parse_mode='HTML'
     )
@@ -307,7 +308,7 @@ async def handle_incident_amount_input(message: Message, state: FSMContext) -> N
         reply_markup=InlineKeyboardMarkup(inline_keyboard=[
             [InlineKeyboardButton(text="📷 Да, прикрепить фото", callback_data="incident_photo_yes")],
             [InlineKeyboardButton(text="⏭️ Пропустить", callback_data="incident_photo_no")],
-            [InlineKeyboardButton(text="❌ Отмена", callback_data="cancel_action")]
+            [InlineKeyboardButton(text="❌ Отмена", callback_data="cancel_action", style="danger")]
         ]),
         parse_mode='HTML'
     )
@@ -334,7 +335,7 @@ async def handle_incident_photo_decision_callback(callback: CallbackQuery, state
 💡 <i>Или нажмите "Пропустить"</i>""",
             reply_markup=InlineKeyboardMarkup(inline_keyboard=[
                 [InlineKeyboardButton(text="⏭️ Пропустить", callback_data="incident_photo_no")],
-                [InlineKeyboardButton(text="❌ Отмена", callback_data="cancel_action")]
+                [InlineKeyboardButton(text="❌ Отмена", callback_data="cancel_action", style="danger")]
             ]),
             parse_mode='HTML'
         )
@@ -363,7 +364,7 @@ async def handle_incident_photo_input(message: Message, state: FSMContext) -> No
             "❌ <b>Фотография не обнаружена</b>\n\n💡 Отправьте фотографию или нажмите 'Пропустить':",
             reply_markup=InlineKeyboardMarkup(inline_keyboard=[
                 [InlineKeyboardButton(text="⏭️ Пропустить", callback_data="incident_photo_no")],
-                [InlineKeyboardButton(text="❌ Отмена", callback_data="cancel_action")]
+                [InlineKeyboardButton(text="❌ Отмена", callback_data="cancel_action", style="danger")]
             ]),
             parse_mode='HTML'
         )

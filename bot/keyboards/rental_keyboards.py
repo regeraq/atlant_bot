@@ -53,7 +53,7 @@ def get_rentals_management_keyboard(rentals: List[Dict[str, Any]], page: int = 0
     
     # Кнопки действий
     keyboard.append([
-        InlineKeyboardButton(text="➕ Добавить аренду", callback_data="admin_add_rental"),
+        InlineKeyboardButton(text="➕ Добавить аренду", callback_data="admin_add_rental", style="primary"),
         InlineKeyboardButton(text="🔄 Обновить", callback_data="admin_refresh_rentals")
     ])
     
@@ -65,7 +65,7 @@ def get_rentals_management_keyboard(rentals: List[Dict[str, Any]], page: int = 0
     return InlineKeyboardMarkup(inline_keyboard=keyboard)
 
 def get_rental_details_keyboard(rental_id: int, user_id: int = None, deposit_status: str = None) -> InlineKeyboardMarkup:
-    """Создает клавиатуру для детальной информации об аренде"""
+    """Создает клавиатуру для детальной информации об аренде с цветными кнопками (Bot API 9.4)"""
     keyboard = [
         [InlineKeyboardButton(text="⏰ Изменить время напоминания", callback_data=f"admin_rental_reminder:{rental_id}")],
         [InlineKeyboardButton(text="📅 Изменить дату окончания", callback_data=f"admin_rental_end_date:{rental_id}")],
@@ -81,12 +81,12 @@ def get_rental_details_keyboard(rental_id: int, user_id: int = None, deposit_sta
     # Модуль 4: Кнопки управления залогом
     if deposit_status:
         if deposit_status == 'pending':
-            keyboard.append([InlineKeyboardButton(text="✅ Залог внесен", callback_data=f"deposit_paid:{rental_id}")])
+            keyboard.append([InlineKeyboardButton(text="✅ Залог внесен", callback_data=f"deposit_paid:{rental_id}", style="success")])
         elif deposit_status == 'paid':
             keyboard.append([InlineKeyboardButton(text="↩️ Залог возвращен", callback_data=f"deposit_returned:{rental_id}")])
     
     keyboard.extend([
-        [InlineKeyboardButton(text="✅ Завершить аренду", callback_data=f"admin_end_rental:{rental_id}")],
+        [InlineKeyboardButton(text="✅ Завершить аренду", callback_data=f"admin_end_rental:{rental_id}", style="primary")],
         [
             InlineKeyboardButton(text="🔙 Назад к списку", callback_data="admin_manage_rentals"),
             InlineKeyboardButton(text="🏠 Админ панель", callback_data="back_to_admin_panel")
@@ -96,11 +96,11 @@ def get_rental_details_keyboard(rental_id: int, user_id: int = None, deposit_sta
     return InlineKeyboardMarkup(inline_keyboard=keyboard)
 
 def get_rental_confirm_end_keyboard(rental_id: int) -> InlineKeyboardMarkup:
-    """Клавиатура подтверждения завершения аренды"""
+    """Клавиатура подтверждения завершения аренды с цветными кнопками (Bot API 9.4)"""
     keyboard = [
         [
-            InlineKeyboardButton(text="✅ Да, завершить", callback_data=f"admin_confirm_end_rental:{rental_id}"),
-            InlineKeyboardButton(text="❌ Отмена", callback_data=f"admin_rental_details:{rental_id}")
+            InlineKeyboardButton(text="✅ Да, завершить", callback_data=f"admin_confirm_end_rental:{rental_id}", style="success"),
+            InlineKeyboardButton(text="❌ Отмена", callback_data=f"admin_rental_details:{rental_id}", style="danger")
         ],
         [InlineKeyboardButton(text="🔙 Назад", callback_data=f"admin_rental_details:{rental_id}")]
     ]

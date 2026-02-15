@@ -242,7 +242,7 @@ async def handle_admin_select_car_for_rental_callback(callback: CallbackQuery, s
             [InlineKeyboardButton(text="📅 Ежедневно", callback_data="rental_reminder_type:daily")],
             [InlineKeyboardButton(text="📆 Еженедельно (7 дней)", callback_data="rental_reminder_type:weekly")],
             [InlineKeyboardButton(text="📅 Ежемесячно (30 дней)", callback_data="rental_reminder_type:monthly")],
-            [InlineKeyboardButton(text="❌ Отмена", callback_data="cancel_action")]
+            [InlineKeyboardButton(text="❌ Отмена", callback_data="cancel_action", style="danger")]
         ]),
         parse_mode='HTML'
     )

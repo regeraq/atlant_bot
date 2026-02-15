@@ -87,6 +87,7 @@ from bot.handlers.broadcast_handlers import (
     handle_broadcast_history_callback, handle_broadcast_reset_callback,
     handle_broadcast_cancel_callback, BroadcastStates
 )
+from bot.handlers.webapp_handlers import router as webapp_router
 
 # Настройка логирования
 logging.basicConfig(
@@ -116,6 +117,9 @@ if BOT_TOKEN == "TEST_TOKEN" or not BOT_TOKEN:
 storage = MemoryStorage()
 bot = Bot(token=BOT_TOKEN)
 dp = Dispatcher(storage=storage)
+
+# Регистрация роутеров
+dp.include_router(webapp_router)
 
 # === ОБРАБОТЧИКИ КОМАНД (должны быть первыми) ===
 
@@ -177,10 +181,13 @@ async def cmd_start(message: Message):
         user_is_admin = await is_admin(message.from_user.id)
     
     if user_is_admin:
+        from bot.utils.formatters import format_divider
+        
         welcome_text = f"""👋 <b>Добро пожаловать, {user_name}!</b>
 
 🔧 <b>Панель администратора</b>
 
+{format_divider("thin")}
 📋 <b>Доступные функции:</b>
 • 🚗 Управление автопарком
 • 📝 Работа с арендой
@@ -189,7 +196,8 @@ async def cmd_start(message: Message):
 • 👥 Управление доступом
 • 📞 Управление контактами
 
-👇 Используйте кнопки меню для навигации."""
+{format_divider("thin")}
+👇 <i>Используйте кнопки меню для навигации</i>"""
         reply_markup = get_admin_main_menu()
     else:
         # Получаем минимальную цену из доступных автомобилей
@@ -201,18 +209,22 @@ async def cmd_start(message: Message):
         else:
             min_price = 5000  # Значение по умолчанию, если нет доступных машин
         
+        from bot.utils.formatters import format_divider
+        
         welcome_text = f"""👋 <b>Добро пожаловать, {user_name}!</b>
 
 🚗 <b>OLIMP AUTO</b>
 Аренда автомобилей с правом выкупа
 
+{format_divider("thin")}
 🎯 <b>Почему выбирают нас:</b>
 • 🚙 Широкий выбор автомобилей
 • 💰 От {min_price:,} ₽/сутки
 • ⚡ Быстрое оформление
 • 🛡️ Полная поддержка 24/7
 
-👇 Используйте кнопки меню для навигации."""
+{format_divider("thin")}
+👇 <i>Используйте кнопки меню для навигации</i>"""
         reply_markup = get_main_menu()
     
     await message.answer(
@@ -921,11 +933,19 @@ async def message_cars(message: Message):
     """Обработчик кнопки '🚗 Каталог автомобилей'"""
     await handle_cars_button(message)
 
-@dp.message(F.text.in_(["👤 Мой профиль", "Мой профиль"]))
+@dp.message(F.text.in_(["👤 Мой профиль", "Мой профиль", "профиль", "Профиль"]))
 async def message_profile(message: Message):
     """Обработчик кнопки '👤 Мой профиль'"""
-    from bot.handlers.user_handlers import handle_user_profile
-    await handle_user_profile(message)
+    # Проверяем, является ли пользователь администратором
+    user_is_admin = await is_admin(message.from_user.id)
+    
+    if user_is_admin:
+        # Если админ, показываем админскую панель вместо обычного профиля
+        await handle_admin_panel_button(message)
+    else:
+        # Обычный пользователь - показываем обычный профиль
+        from bot.handlers.user_handlers import handle_user_profile
+        await handle_user_profile(message)
 
 @dp.message(F.text.in_(["📞 Контакты", "Контакты"]))
 async def message_contacts(message: Message):
@@ -1004,17 +1024,25 @@ async def callback_back_to_main(callback: CallbackQuery):
         user_is_admin = await is_admin(callback.from_user.id)
     
     if user_is_admin:
-        welcome_text = f"""<b>Добро пожаловать, {user_name}</b>
+        from bot.utils.formatters import format_divider
+        
+        welcome_text = f"""👋 <b>Добро пожаловать, {user_name}!</b>
 
-<b>🔧 Панель администратора</b>"""
+🔧 <b>Панель администратора</b>
+
+{format_divider("thin")}
+👇 <i>Используйте кнопки меню для навигации</i>"""
         reply_markup = get_admin_main_menu()
     else:
+        from bot.utils.formatters import format_divider
+        
         welcome_text = f"""👋 <b>Добро пожаловать, {user_name}!</b>
 
 🚗 <b>OLIMP AUTO</b>
 Аренда автомобилей с правом выкупа
 
-👇 Используйте кнопки меню для навигации."""
+{format_divider("thin")}
+👇 <i>Используйте кнопки меню для навигации</i>"""
         reply_markup = get_main_menu()
     
     await callback.message.answer(
@@ -1039,8 +1067,29 @@ async def handle_text_messages(message: Message, state: FSMContext):
         # Если есть активное состояние, не обрабатываем здесь - пусть FSM обработчики работают
         return
     
-    await message.answer(
-        """<b>Команда не распознана</b>
+    # Проверяем, является ли пользователь администратором
+    user_is_admin = await is_admin(message.from_user.id)
+    
+    if user_is_admin:
+        # Для админов показываем админское меню
+        await message.answer(
+            """<b>Команда не распознана</b>
+
+Используйте кнопки меню для навигации.
+
+Доступные действия:
+• Админ панель
+• Каталог автомобилей
+• Помощь
+
+Отправьте /help для справки.""",
+            reply_markup=get_admin_main_menu(),
+            parse_mode='HTML'
+        )
+    else:
+        # Для обычных пользователей показываем обычное меню
+        await message.answer(
+            """<b>Команда не распознана</b>
 
 Используйте кнопки меню для навигации.
 
@@ -1050,9 +1099,9 @@ async def handle_text_messages(message: Message, state: FSMContext):
 • Помощь
 
 Отправьте /help для справки.""",
-        reply_markup=get_main_menu(),
-        parse_mode='HTML'
-    )
+            reply_markup=get_main_menu(),
+            parse_mode='HTML'
+        )
 
 async def initialize_first_admin():
     """Инициализация первого администратора"""

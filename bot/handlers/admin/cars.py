@@ -812,7 +812,7 @@ async def handle_image_upload(message: Message, state: FSMContext, image_slot: s
 💡 <i>Отправьте следующую фотографию или нажмите 'Пропустить':</i>""",
                     reply_markup=InlineKeyboardMarkup(inline_keyboard=[
                         [InlineKeyboardButton(text="⏭️ Пропустить", callback_data=f"car_skip_images:{car_id}")],
-                        [InlineKeyboardButton(text="❌ Отмена", callback_data="cancel_action")]
+                        [InlineKeyboardButton(text="❌ Отмена", callback_data="cancel_action", style="danger")]
                     ]),
                     parse_mode='HTML'
                 )
@@ -961,7 +961,7 @@ async def handle_car_add_images_callback(callback: CallbackQuery, state: FSMCont
 💡 <i>Отправьте первую фотографию или нажмите 'Пропустить':</i>""",
         reply_markup=InlineKeyboardMarkup(inline_keyboard=[
             [InlineKeyboardButton(text="⏭️ Пропустить", callback_data=f"car_skip_images:{car_id}")],
-            [InlineKeyboardButton(text="❌ Отмена", callback_data="cancel_action")]
+            [InlineKeyboardButton(text="❌ Отмена", callback_data="cancel_action", style="danger")]
         ]),
         parse_mode='HTML'
     )
