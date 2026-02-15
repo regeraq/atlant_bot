@@ -179,8 +179,7 @@ def get_profile_keyboard(
 
 def get_webapp_keyboard():
     """Создает клавиатуру с кнопкой для открытия Web App"""
-    # IMPORTANT: Замените URL на ваш GitHub Pages URL
-    # Пример: https://yourname.github.io/atlant_bot/
+    # URL GitHub Pages для Web App
     web_app_url = "https://regeraq.github.io/atlant_bot/"
     
     web_app_info = WebAppInfo(url=web_app_url)
